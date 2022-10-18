@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: test
 data:
-  name: https://_ARGOCD_PLUGIN_FOO_/blah/blah
+  name: https://_ARGOCD_ENV_FOO_/blah/blah
