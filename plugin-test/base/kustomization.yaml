@@ -1,6 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-configMapGenerator:
-  - name: foo
-    literals:
-      - RDS_CONNECTION=https://__ARGOCD_PLUGIN_REALM_NAME__/blah/blah

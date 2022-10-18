@@ -1,0 +1,4 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  name: https://__ARGOCD_PLUGIN_REALM_NAME__/blah/blah
