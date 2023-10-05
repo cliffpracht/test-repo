@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: aws-eks-system
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - service: metrics-server
+                  namespace: kube-system
+                  overlay: overlays/default
+                - service: aws-cluster-autoscaler
+                  namespace: aws-cluster-autoscaler-system
+                  overlay: overlays/default
+                - service: datadog
+                  namespace: datadog-system
+          - clusters:
+              selector:
+                matchLabels:
+                  provider: "aws"
+                  provisioner: "eks"
+  template:
+    # {{.name}} and {{.server}} provided by cluster generator
+    metadata:
+      name: '{{printf "%s-aws-eks-system-%s" .name .service | printf "%.63s"}}'
+      labels:
+        app: "{{.service}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/cliffpracht/test-repo
+        targetRevision: HEAD
+        path: 'kubernetes/services/aws-eks-system/{{.service}}/{{default "base" .overlay}}'
+      destination:
+        server: "{{.server}}"
+        namespace: "{{.namespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+        syncOptions:
+          - CreateNamespace={{default false .createNamespace}}
