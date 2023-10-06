@@ -23,6 +23,14 @@ spec:
               #   matchLabels:
               #     provider: "aws"
               #     provisioner: "eks"
+    - merge:
+        generators:
+           - list:
+              elements:
+                - cluster: 'https://kubernetes.docker.internal:6443'
+                  service: metrics-server
+                  namespace: kube-system
+                  overlay: new
   template:
     # {{.name}} and {{.server}} provided by cluster generator
     metadata:
