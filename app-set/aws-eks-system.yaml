@@ -18,11 +18,11 @@ spec:
                   overlay: overlays/default
                 - service: datadog
                   namespace: datadog-system
-          - clusters:
-              selector:
-                matchLabels:
-                  provider: "aws"
-                  provisioner: "eks"
+          - clusters: {}
+              # selector:
+              #   matchLabels:
+              #     provider: "aws"
+              #     provisioner: "eks"
   template:
     # {{.name}} and {{.server}} provided by cluster generator
     metadata:
