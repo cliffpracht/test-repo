@@ -10,26 +10,20 @@ spec:
         generators:
           - list:
               elements:
-                - service: metrics-server
-                  namespace: kube-system
+                - service: service1
+                  namespace: ns1
                   overlay: overlays/default
-                - service: aws-cluster-autoscaler
-                  namespace: aws-cluster-autoscaler-system
+                - service: service2
+                  namespace: ns2
                   overlay: overlays/default
-                - service: datadog
-                  namespace: datadog-system
           - clusters: {}
-              # selector:
-              #   matchLabels:
-              #     provider: "aws"
-              #     provisioner: "eks"
     - merge:
         generators:
            - list:
               elements:
                 - cluster: 'https://kubernetes.docker.internal:6443'
-                  service: metrics-server
-                  namespace: kube-system
+                  service: servicexxx
+                  namespace: ns1
                   overlay: new
   template:
     # {{.name}} and {{.server}} provided by cluster generator
@@ -42,7 +36,7 @@ spec:
       source:
         repoURL: https://github.com/cliffpracht/test-repo
         targetRevision: HEAD
-        path: 'kubernetes/services/aws-eks-system/{{.service}}/{{default "base" .overlay}}'
+        path: 'service/{{.service}}/{{default "base" .overlay}}'
       destination:
         server: "{{.server}}"
         namespace: "{{.namespace}}"
