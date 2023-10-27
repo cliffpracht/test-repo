@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service2
+spec:
+  ports:
+  - name: tcp-msgr1
+    port: 6789
+    protocol: TCP
+    targetPort: 6789
+  selector:
+    app: service2
