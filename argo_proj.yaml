@@ -3,7 +3,7 @@ kind: AppProject
 metadata:
   name: project1
   labels:
-    example.cloud/part-of: gateway 
+    example: gateway 
 spec:
   clusterResourceWhitelist:
   - group: ""
@@ -33,3 +33,12 @@ spec:
     server: '*'
   sourceRepos:
   - '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: proj-global-test
+spec:
+  namespaceResourceBlacklist:
+  - group: ""
+    kind: Pod
