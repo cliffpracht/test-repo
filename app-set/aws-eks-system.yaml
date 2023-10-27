@@ -6,29 +6,32 @@ metadata:
 spec:
   goTemplate: true
   generators:
-    - matrix:
+    - merge:
+        mergeKeys:
+          - name
+          - service
         generators:
+          - matrix:
+              generators:
+                - list:
+                    elements:
+                      - service: service1
+                        namespace: ns1
+                        overlay: overlays/default
+                      - service: service2
+                        namespace: ns2
+                        overlay: overlays/default
+                - clusters: {}
           - list:
               elements:
-                - service: service1
-                  namespace: ns1
+                - name: docker-desktop
+                  service: cert-manager
+                  namespace: cert-manager-system
                   overlay: overlays/default
-                - service: service2
-                  namespace: ns2
-                  overlay: overlays/default
-          - clusters: {}
-    - merge:
-        generators:
-           - list:
-              elements:
-                - cluster: 'https://kubernetes.docker.internal:6443'
-                  service: servicexxx
-                  namespace: ns1
-                  overlay: new
   template:
     # {{.name}} and {{.server}} provided by cluster generator
     metadata:
-      name: '{{printf "%s-aws-eks-system-%s" .name .service | printf "%.63s"}}'
+      name: '{{printf "%s-aws-eks-system-%s"  .name .service | printf "%.63s"}}'
       labels:
         app: "{{.service}}"
     spec:
@@ -36,7 +39,7 @@ spec:
       source:
         repoURL: https://github.com/cliffpracht/test-repo
         targetRevision: HEAD
-        path: 'service/{{.service}}/{{default "base" .overlay}}'
+        path: 'services/{{.service}}/{{default "base" .overlay}}'
       destination:
         server: "{{.server}}"
         namespace: "{{.namespace}}"
