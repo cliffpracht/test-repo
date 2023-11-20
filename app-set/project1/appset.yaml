@@ -1,13 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: service-appset
+  name: proj-appset
   namespace: argocd
 spec:
   generators:
     - list:
         elements:
-          - service: service
+          - service: service1
+          - service: service2
   template:
     metadata:
       name: "{{service}}-applicationsets"
