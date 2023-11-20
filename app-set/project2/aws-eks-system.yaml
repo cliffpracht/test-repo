@@ -11,10 +11,10 @@ spec:
           generators:
           - list:
               elements:
-              - namespace: ns1
+              - namespace: ns4
                 overlay: overlays/default
                 service: service1
-              - namespace: ns3
+              - namespace: ns5
                 overlay: overlays/default
                 service: service2
           - clusters: {}
