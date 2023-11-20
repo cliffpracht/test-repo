@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: project2-set
+  name: project1-set
   namespace: argocd
 spec:
   generators:
@@ -11,7 +11,10 @@ spec:
           generators:
           - list:
               elements:
-              - namespace: ns2
+              - namespace: ns1
+                overlay: overlays/default
+                service: service1
+              - namespace: ns3
                 overlay: overlays/default
                 service: service2
           - clusters: {}
@@ -29,14 +32,15 @@ spec:
     metadata:
       labels:
         app: '{{.service}}'
-      name: '{{printf "%s-aws-eks-system-%s"  .name .service | printf "%.63s"}}'
+      name: '{{printf "%s-aws-eks-system-%s-%s"  .name .service .namespace| printf
+        "%.63s"}}'
     spec:
       destination:
         namespace: '{{.namespace}}'
         server: '{{.server}}'
-      project: project2
+      project: project1
       source:
-        path: services/{{.service}}/{{default "base" .overlay}}
+        path: services/{{.service}}-{{.namespace}}/{{default "base" .overlay}}
         repoURL: https://github.com/cliffpracht/test-repo
         targetRevision: HEAD
       syncPolicy:
