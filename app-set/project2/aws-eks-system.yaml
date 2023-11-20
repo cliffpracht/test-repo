@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: project1-set
+  name: project2-set
   namespace: argocd
 spec:
   generators:
@@ -41,53 +41,6 @@ spec:
       project: project1
       source:
         path: services/{{.service}}-{{.namespace}}/{{default "base" .overlay}}
-        repoURL: https://github.com/cliffpracht/test-repo
-        targetRevision: HEAD
-      syncPolicy:
-        automated:
-          prune: true
-        syncOptions:
-        - CreateNamespace={{default false .createNamespace}}
----
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: project2-set
-  namespace: argocd
-spec:
-  generators:
-  - merge:
-      generators:
-      - matrix:
-          generators:
-          - list:
-              elements:
-              - namespace: ns2
-                overlay: overlays/default
-                service: service2
-          - clusters: {}
-      - list:
-          elements:
-          - name: docker-desktop
-            namespace: cert-manager-system
-            overlay: overlays/default
-            service: cert-manager
-      mergeKeys:
-      - name
-      - service
-  goTemplate: true
-  template:
-    metadata:
-      labels:
-        app: '{{.service}}'
-      name: '{{printf "%s-aws-eks-system-%s"  .name .service | printf "%.63s"}}'
-    spec:
-      destination:
-        namespace: '{{.namespace}}'
-        server: '{{.server}}'
-      project: project2
-      source:
-        path: services/{{.service}}/{{default "base" .overlay}}
         repoURL: https://github.com/cliffpracht/test-repo
         targetRevision: HEAD
       syncPolicy:
