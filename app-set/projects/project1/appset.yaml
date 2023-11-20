@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: component-appset
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - service: service1
+          - service: service2
+  template:
+    metadata:
+      name: "{{service}}-applicationsets"
+    spec:
+      project: project1
+      source:
+        repoURL: https://github.com/cliffpracht/test-repo
+        targetRevision: HEAD
+        path: "services/{{service}}"
+      destination:
+        namespace: argocd
+        server: "https://kubernetes.default.svc"
+      syncPolicy:
+        automated:
+          prune: false
+        syncOptions:
+          - CreateNamespace=false
