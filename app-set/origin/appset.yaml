@@ -16,7 +16,7 @@ spec:
       source:
         repoURL: https://github.com/cliffpracht/test-repo
         targetRevision: HEAD
-        path: "app-set/{{project}}"
+        path: "app-set/projects/{{project}}"
       destination:
         namespace: argocd
         server: "https://kubernetes.default.svc"
