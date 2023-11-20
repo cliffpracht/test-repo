@@ -1,13 +1,40 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: service-appset
+  name: component1
   namespace: argocd
 spec:
   generators:
     - list:
         elements:
           - service: service1
+  template:
+    metadata:
+      name: "{{service}}-applicationsets"
+    spec:
+      project: project1
+      source:
+        repoURL: https://github.com/cliffpracht/test-repo
+        targetRevision: HEAD
+        path: "services/{{service}}/overlays/default"
+      destination:
+        namespace: argocd
+        server: "https://kubernetes.default.svc"
+      syncPolicy:
+        automated:
+          prune: false
+        syncOptions:
+          - CreateNamespace=false
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: component2
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
           - service: service2
   template:
     metadata:
@@ -17,7 +44,7 @@ spec:
       source:
         repoURL: https://github.com/cliffpracht/test-repo
         targetRevision: HEAD
-        path: "services/{{service}}"
+        path: "services/{{service}}/overlays/default"
       destination:
         namespace: argocd
         server: "https://kubernetes.default.svc"
@@ -26,3 +53,4 @@ spec:
           prune: false
         syncOptions:
           - CreateNamespace=false
+
