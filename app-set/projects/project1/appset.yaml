@@ -24,7 +24,7 @@ spec:
         automated:
           prune: false
         syncOptions:
-          - CreateNamespace=false
+          - CreateNamespace=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
